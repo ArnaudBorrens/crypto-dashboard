@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexo Portfolio Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Nexo Portfolio Dashboard</h1>
+            <p class="header-subtitle">Upload your Nexo CSV file to track your cryptocurrency portfolio</p>
+        </header>
+
+        <!-- CSV Upload Section (Main Feature) -->
+        <section class="upload-section">
+            <div class="upload-container" id="uploadContainer">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <h2>Upload Your Nexo CSV File</h2>
+                    <p>Drag and drop your CSV file here, or click to browse</p>
+                    <button class="btn btn--primary" id="browseButton">Browse Files</button>
+                    <input type="file" id="csvFileInput" accept=".csv" hidden>
+                </div>
+                
+                <!-- Processing Status -->
+                <div class="upload-status hidden" id="uploadStatus">
+                    <div class="status-indicator">⏳</div>
+                    <p id="statusMessage">Processing your file...</p>
+                </div>
+
+                <!-- Upload Success -->
+                <div class="upload-success hidden" id="uploadSuccess">
+                    <div class="status-indicator success">✅</div>
+                    <p>File processed successfully! <span id="transactionCount">0</span> transactions found.</p>
+                </div>
+            </div>
+
+            <!-- CSV Format Guide -->
+            <details class="csv-guide">
+                <summary>Need help with CSV format?</summary>
+                <div class="csv-guide-content">
+                    <h4>Required Nexo CSV Format:</h4>
+                    <ul>
+                        <li><strong>Headers:</strong> Transaction, Type, Input Currency, Input Amount, Output Currency, Output Amount, USD Equivalent, Details, Date / Time (UTC)</li>
+                        <li><strong>Date Format:</strong> M/D/YYYY H:MM (e.g., "9/1/2025 5:00")</li>
+                        <li><strong>Supported Transaction Types:</strong> Interest, Fixed Term Interest, Exchange, Exchange Cashback, Cashback, Deposit To Exchange, Top up Crypto, Transfer In, Nexo Card Purchase</li>
+                    </ul>
+                    <p><strong>How to export:</strong> Go to Nexo app → Portfolio → Transaction History → Export → Download CSV</p>
+                </div>
+            </details>
+        </section>
+
+        <!-- Portfolio Overview (Initially Hidden) -->
+        <section class="portfolio-section hidden" id="portfolioSection">
+            <h2>Portfolio Overview</h2>
+            
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="card summary-card">
+                    <div class="card__body">
+                        <h3>Total Portfolio Value</h3>
+                        <div class="metric-value" id="totalValue">$0.00</div>
+                        <div class="metric-change" id="totalChange">Fetching prices...</div>
+                    </div>
+                </div>
+                
+                <div class="card summary-card">
+                    <div class="card__body">
+                        <h3>Total Earnings</h3>
+                        <div class="metric-value" id="totalPnL">$0.00</div>
+                        <div class="metric-change" id="pnlPercentage">Interest + Rewards</div>
+                    </div>
+                </div>
+                
+                <div class="card summary-card">
+                    <div class="card__body">
+                        <h3>Total Assets</h3>
+                        <div class="metric-value" id="totalAssets">0</div>
+                        <div class="metric-subtext">Different cryptocurrencies</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio Allocation Chart -->
+            <div class="card chart-card">
+                <div class="card__body">
+                    <h3>Portfolio Allocation</h3>
+                    <div class="chart-container" style="position: relative; height: 300px;">
+                        <canvas id="allocationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holdings Table -->
+            <div class="card">
+                <div class="card__body">
+                    <h3>Your Holdings</h3>
+                    <div class="table-container">
+                        <table class="holdings-table" id="holdingsTable">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Amount</th>
+                                    <th>Current Price</th>
+                                    <th>Value</th>
+                                    <th>24h Change</th>
+                                </tr>
+                            </thead>
+                            <tbody id="holdingsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 20px; color: var(--color-text-secondary);">
+                                        Loading holdings data...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="card">
+                <div class="card__body">
+                    <h3>Recent Transactions</h3>
+                    <div class="table-container">
+                        <table class="transactions-table" id="transactionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Currency</th>
+                                    <th>Amount</th>
+                                    <th>USD Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 20px; color: var(--color-text-secondary);">
+                                        Loading transaction history...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clear Data Button -->
+            <div class="actions">
+                <button class="btn btn--outline" id="clearDataButton">Clear All Data</button>
+                <button class="btn btn--secondary" id="uploadNewButton">Upload New CSV</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Data updates every 30 seconds • Powered by CoinGecko API • Supports 18+ cryptocurrencies</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
